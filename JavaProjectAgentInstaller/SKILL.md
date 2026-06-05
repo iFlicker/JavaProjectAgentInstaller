@@ -1,52 +1,52 @@
 ---
 name: JavaProjectAgentInstaller
-description: Ask the user for installation preferences first, wait for explicit confirmation, then install the ProjectAgents Java AI guidance template into a target Java repository, merge safely with existing AGENTS/CLAUDE/ProjectAgents docs, perform a first-pass project review to fill placeholders from real modules, framework stack, config entrypoints, tests, and build structure, and then remind the user to close the skill so it does not keep getting auto-invoked by semantic matching. Use when Codex needs to bootstrap or refresh shared agent guidance in a modern Java project without clobbering existing documentation.
+description: 先询问用户的安装偏好，等待明确确认后，再将 ProjectAgents Java AI guidance template 安装到目标 Java 仓库中；与现有的 AGENTS/CLAUDE/ProjectAgents 文档安全合并；执行首轮项目审查，根据真实模块、framework stack、config entrypoints、tests 和 build structure 填充占位内容；最后提醒用户关闭该 skill，避免它在后续 semantic matching 中被自动调用。适用于 Codex 需要在现代 Java 项目中初始化或刷新共享 agent guidance，且不覆盖现有文档的场景。
 ---
 
-# Java Project Agents Installer
+# Java Project Agents 安装器
 
-Ask for preferences first, wait for explicit confirmation, then install the seed docs and finish the project review before claiming the onboarding is complete.
+先询问偏好，等待明确确认，再安装初始文档，并在宣布 onboarding 完成前结束项目审查。
 
-## Workflow
+## 工作流
 
-1. Treat the user's current Java repo as the target unless they provided another path.
-2. Ask the user what preferences they have before installation. At minimum, confirm whether they want any non-default target path, merge behavior expectations for existing docs, and any review scope preferences.
-3. Wait for explicit user confirmation before running the installer. If the user has no special preferences, ask them to confirm that the default installation behavior is acceptable.
-4. Run:
+1. 除非用户提供了其他路径，否则将用户当前的 Java repo 视为目标。
+2. 在安装前询问用户有哪些偏好。至少要确认：是否需要非默认目标路径、对现有文档的合并行为有什么预期，以及是否有审查范围偏好。
+3. 在运行安装器之前，必须等待用户明确确认。如果用户没有特殊偏好，要求他们确认默认安装行为可以接受。
+4. 运行：
 
 ```bash
 python3 /absolute/path/to/JavaProjectAgentInstaller/scripts/install_project_agents.py --project-root /path/to/java/project
 ```
 
-5. Read `ProjectAgents/references/project-agents-onboarding-review.md`.
-6. Resolve every follow-up item the script leaves behind:
-   - review every `TODO(` item against the real project structure
-   - merge every `.incoming.md` file into the existing docs or explicitly decide to keep the existing file
-   - verify entry module, shared module, contract module, infrastructure module, framework stack, config profiles, persistence / messaging patterns, and high-risk modules
-7. Fold confirmed stable facts back into `ProjectAgents/ProjectAgents.md` and the relevant `ProjectAgents/references/*.md` files.
-8. Leave `ProjectAgents/CHANGELOG.md` updated with the onboarding work.
-9. Prompt the user to close or disable this skill after installation. Explain that leaving it enabled may cause accidental auto-invocation in later semantic skill-matching flows.
+5. 读取 `ProjectAgents/references/project-agents-onboarding-review.md`。
+6. 处理脚本留下的每一项后续事项：
+   - 对照真实项目结构审查每个 `TODO(` 条目
+   - 将每个 `.incoming.md` 文件合并进现有文档，或明确决定保留现有文件
+   - 验证 entry module、shared module、contract module、infrastructure module、framework stack、config profiles、persistence / messaging patterns，以及高风险模块
+7. 将已确认且稳定的事实回填到 `ProjectAgents/ProjectAgents.md` 和相关的 `ProjectAgents/references/*.md` 文件中。
+8. 更新 `ProjectAgents/CHANGELOG.md`，记录本次 onboarding 工作。
+9. 安装完成后，提示用户关闭或禁用这个 skill。说明如果继续启用，它可能会在后续 semantic skill-matching 流程中被意外自动调用。
 
-## Compatibility Rules
+## 兼容性规则
 
-- Never replace an existing `AGENTS.md` or `CLAUDE.md` wholesale. The installer only appends a managed pointer block when those files already exist.
-- If an existing `ProjectAgents/*.md` file still contains template placeholders, let the installer fill it in place.
-- If an existing `ProjectAgents/*.md` file already contains custom content, keep it untouched and use the generated `.incoming.md` file as the merge candidate.
-- Never run the installer before the user has stated their preferences and explicitly confirmed the installation step.
-- Do not delete user-authored docs unless the user explicitly asks for cleanup.
+- 不要整体替换已有的 `AGENTS.md` 或 `CLAUDE.md`。如果这些文件已存在，安装器只会追加一个受管理的指针区块。
+- 如果现有 `ProjectAgents/*.md` 文件仍包含模板占位内容，让安装器原地填充。
+- 如果现有 `ProjectAgents/*.md` 文件已经包含自定义内容，保持其不变，并使用生成的 `.incoming.md` 文件作为合并候选。
+- 在用户说明其偏好并明确确认安装步骤之前，绝不能运行安装器。
+- 除非用户明确要求清理，否则不要删除用户编写的文档。
 
-## Review Focus
+## 审查重点
 
-Confirm these areas manually when the script confidence is not high enough:
+当脚本的置信度不足时，手动确认以下区域：
 
-- main runnable module, API/web entry module, common/shared module, infrastructure/data module
-- Gradle vs Maven build shape, parent BOM, version catalogs, build logic, annotation processors
-- service contracts, REST/RPC entrypoints, persistence, cache, messaging, scheduled jobs
-- history-heavy modules, generated-code boundaries, starter/BOM modules, externalized integrations
-- module-local `AGENTS.md` / `CLAUDE.md` files that should be referenced in the shared guidance
-- common package namespaces, config files, test directories, utility/base classes, and deployment context files
+- main runnable module、API/web entry module、common/shared module、infrastructure/data module
+- Gradle 与 Maven 的构建形态、parent BOM、version catalogs、build logic、annotation processors
+- service contracts、REST/RPC entrypoints、persistence、cache、messaging、scheduled jobs
+- 历史负担较重的模块、generated-code 边界、starter/BOM 模块、externalized integrations
+- 应在共享 guidance 中被引用的模块级 `AGENTS.md` / `CLAUDE.md` 文件
+- 通用 package namespaces、config files、test directories、utility/base classes，以及 deployment context files
 
-## Resources
+## 资源
 
-- `assets/template/`: the seed ProjectAgents docs copied into target repos
-- `scripts/install_project_agents.py`: installer, compatibility handler, and first-pass review generator
+- `assets/template/`：复制到目标仓库中的初始 ProjectAgents 文档
+- `scripts/install_project_agents.py`：安装器、兼容性处理器，以及首轮审查生成器
