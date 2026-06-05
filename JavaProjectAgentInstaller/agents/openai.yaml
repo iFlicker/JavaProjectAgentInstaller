@@ -1,4 +1,4 @@
 interface:
   display_name: "JavaProjectAgentInstaller"
-  short_description: "Install shared AI guidance docs into Java repos"
-  default_prompt: "Use $JavaProjectAgentInstaller to install and tailor ProjectAgents guidance into this Java project."
+  short_description: "Ask preferences, confirm, then install shared AI guidance docs into Java repos"
+  default_prompt: "Use $JavaProjectAgentInstaller to ask for installation preferences first, wait for confirmation, and then install and tailor ProjectAgents guidance into this Java project."
